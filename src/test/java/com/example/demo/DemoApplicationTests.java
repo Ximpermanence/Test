@@ -27,7 +27,6 @@ import com.example.demo.util.EncodeUtil;
 import com.example.demo.util.EnumUtils;
 import com.example.demo.util.ReflectFieldUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.security.SecurityUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.junit.jupiter.api.Test;
@@ -36,6 +35,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import oshi.SystemInfo;
+import oshi.hardware.CentralProcessor;
+import oshi.hardware.CentralProcessor.TickType;
+import oshi.hardware.GlobalMemory;
+import oshi.hardware.HardwareAbstractionLayer;
+import oshi.software.os.FileSystem;
+import oshi.software.os.OSFileStore;
+import oshi.software.os.OperatingSystem;
+import oshi.util.Util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -46,7 +54,6 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Security;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -89,6 +96,7 @@ class DemoApplicationTests {
      * 临时原始数据字典（区/县）
      */
     private static Map<String, String> temp_dict_district = new HashMap<String, String>();
+    private static final int OSHI_WAIT_SECOND = 1000;
 
 
     private static void accept(Student a) {
@@ -777,7 +785,6 @@ class DemoApplicationTests {
                     })
                     .collect(Collectors.toList());
 
-
             filteredLines.forEach(System.out::println);
 
         } catch (IOException e) {
@@ -864,5 +871,83 @@ class DemoApplicationTests {
             //打印标题
             Console.log(title);
         }
+    }
+
+    /**
+     * 尝试todo
+     */
+    @Test
+    void Test39() {
+        //TODO: 2021/2/1 测试todo  @陈浩
+//        String a = StringUtils.toRootUpperCase("device_is_online");
+//        out.println(1);
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("a");
+        list.add("b");
+        list.add("c");
+        list.add("d");
+        System.out.println(list.subList(1, 4));
+    }
+
+    /**
+     * 获取服务器信息
+     */
+    @Test
+    void Test40() {
+        SystemInfo si = new SystemInfo();
+        HardwareAbstractionLayer hal = si.getHardware();
+        CentralProcessor processor = hal.getProcessor();
+        GlobalMemory memory = hal.getMemory();
+        OperatingSystem operatingSystem = si.getOperatingSystem();
+
+        // CPU信息
+        long[] prevTicks = processor.getSystemCpuLoadTicks();
+        Util.sleep(OSHI_WAIT_SECOND);
+        long[] ticks = processor.getSystemCpuLoadTicks();
+        long nice = ticks[TickType.NICE.getIndex()] - prevTicks[TickType.NICE.getIndex()];
+        long irq = ticks[TickType.IRQ.getIndex()] - prevTicks[TickType.IRQ.getIndex()];
+        long softirq = ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];
+        long steal = ticks[TickType.STEAL.getIndex()] - prevTicks[TickType.STEAL.getIndex()];
+        long cSys = ticks[TickType.SYSTEM.getIndex()] - prevTicks[TickType.SYSTEM.getIndex()];
+        long user = ticks[TickType.USER.getIndex()] - prevTicks[TickType.USER.getIndex()];
+        long iowait = ticks[TickType.IOWAIT.getIndex()] - prevTicks[TickType.IOWAIT.getIndex()];
+        long idle = ticks[TickType.IDLE.getIndex()] - prevTicks[TickType.IDLE.getIndex()];
+        long totalCpu = user + nice + cSys + idle + iowait + irq + softirq + steal;
+
+        //内存
+        memory.getTotal();
+        long a = memory.getTotal() - memory.getAvailable();
+        memory.getAvailable();
+
+        //jvm
+        Properties props = System.getProperties();
+        Runtime.getRuntime().totalMemory();
+        Runtime.getRuntime().maxMemory();
+        Runtime.getRuntime().freeMemory();
+        props.getProperty("java.version");
+        props.getProperty("java.home");
+
+        //磁盘信息
+        FileSystem fileSystem = operatingSystem.getFileSystem();
+        List<OSFileStore> fsArray = fileSystem.getFileStores();
+        for (OSFileStore fs : fsArray) {
+            long free = fs.getUsableSpace();
+            long total = fs.getTotalSpace();
+            long used = total - free;
+            fs.getMount();
+            fs.getType();
+            fs.getName();
+            long usedProportion = used / total;
+
+        }
+
+    }
+
+    /**
+     *
+     */
+    @Test
+    void Test41(){
+
     }
 }
