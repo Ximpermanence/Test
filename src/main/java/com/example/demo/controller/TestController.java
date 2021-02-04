@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.Result1;
 import com.example.demo.entity.Class;
 import com.example.demo.entity.Student;
@@ -49,18 +48,21 @@ public class TestController {
         return collect;
     }
 
+    /**
+     * 尝试多线程产生的问题
+     *
+     * @return
+     */
     @GetMapping("2")
-    private Result1< Integer,List<Student>> test2() {
+    private Result1<Integer, List<Student>> test2() {
         QueryWrapper<Student> qr = new QueryWrapper<>();
         qr.eq("name", "a");
-        Page<Student> page = new Page<>();
         CompletableFuture<List<Student>> thread1 = CompletableFuture.supplyAsync(() -> studentMapper.pageStudent(qr));
         qr.eq("gender", "男");
         CompletableFuture<Integer> thread2 = CompletableFuture.supplyAsync(() -> studentService.count(qr));
         int count = thread2.join();
-//        int count = 2;
         List<Student> students = thread1.join();
-        Result1<Integer,List<Student>> result1 = new Result1<>();
+        Result1<Integer, List<Student>> result1 = new Result1<>();
         result1.setData(count);
         result1.setData2(students);
         return result1;

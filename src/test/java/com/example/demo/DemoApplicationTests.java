@@ -949,7 +949,7 @@ class DemoApplicationTests {
      * 将base64字符串和图片的转换
      */
     @Test
-    void Test42() throws IOException {
+    void Test41() throws IOException {
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         try {
@@ -985,7 +985,7 @@ class DemoApplicationTests {
      * 两个线程同时执行并得到结果
      */
     @Test
-    void Test43() throws ExecutionException, InterruptedException {
+    void Test42() throws ExecutionException, InterruptedException {
         long l1 = currentTimeMillis();
 //        nMillionSout(2,"线程1");
 //        nMillionSout(2,"线程2");
@@ -1012,16 +1012,5 @@ class DemoApplicationTests {
         return subtraction;
     }
 
-    /**
-     * 多线程CompletableFuture加上mybatisplus使用产生的问题
-     */
-    @Test
-    void Test44() {
-        QueryWrapper<Student> qr = new QueryWrapper<>();
-        qr.eq("gender", "男");
-        int count = studentService.count(qr);
-        out.println(1);
-
-    }
 
 }
