@@ -10,6 +10,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.aop.AppConfig;
 import com.example.demo.aop.UserDao;
 import com.example.demo.entity.Class;
@@ -45,10 +46,7 @@ import oshi.software.os.OSFileStore;
 import oshi.software.os.OperatingSystem;
 import oshi.util.Util;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -59,6 +57,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,6 +81,8 @@ class DemoApplicationTests {
 
     @Autowired
     private TeacherMapper teacherMapper;
+
+    private static String testString;
 
     /**
      * 临时原始数据字典（省）
@@ -944,10 +946,82 @@ class DemoApplicationTests {
     }
 
     /**
-     *
+     * 将base64字符串和图片的转换
      */
     @Test
-    void Test41(){
+    void Test42() throws IOException {
+        FileInputStream inputStream = null;
+        FileOutputStream outputStream = null;
+        try {
+
+//将图片转为字符串
+            Base64.Encoder encoder = Base64.getEncoder();
+            inputStream = new FileInputStream("C:\\Users\\CH\\AppData\\Roaming\\Typora\\typora-user-images\\image-20200827163736442.png");
+            int available = inputStream.available();
+            byte[] bytes = new byte[available];
+            inputStream.read(bytes);
+            String base64Str = encoder.encodeToString(bytes);
+            System.out.println(base64Str);
+
+            //将base64字符串转成图片
+            //因为idea编译的时候不能定义这么长的字符串，只能先把这个字符串先赋值再写出去
+            testString = base64Str;
+            Base64.Decoder decoder = Base64.getDecoder();
+            testString.replaceAll("\r\n", "");
+
+            byte[] bytes2 = decoder.decode(testString);
+            outputStream = new FileOutputStream("d://temp.jpg");
+            outputStream.write(bytes2);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            outputStream.close();
+        }
 
     }
+
+    /**
+     * 两个线程同时执行并得到结果
+     */
+    @Test
+    void Test43() throws ExecutionException, InterruptedException {
+        long l1 = currentTimeMillis();
+//        nMillionSout(2,"线程1");
+//        nMillionSout(2,"线程2");
+
+        CompletableFuture<Long> thread1 = CompletableFuture.supplyAsync(() -> nMillionSout(1, "线程1"));
+        CompletableFuture<Long> thread2 = CompletableFuture.supplyAsync(() -> nMillionSout(1, "线程2"));
+
+        CompletableFuture.allOf(thread1, thread2).join();
+
+        thread1.get();
+        thread2.get();
+        long l2 = currentTimeMillis() - l1;
+        out.println("总耗时:" + l2);
+    }
+
+    private long nMillionSout(int n, String threadName) {
+        long l1 = currentTimeMillis();
+        for (int i = 0; i <= n * 1000000; i++) {
+            out.println(i + threadName);
+        }
+        long l2 = currentTimeMillis();
+        long subtraction = l2 - l1;
+        out.println(threadName + "耗时:" + subtraction);
+        return subtraction;
+    }
+
+    /**
+     * 多线程CompletableFuture加上mybatisplus使用产生的问题
+     */
+    @Test
+    void Test44() {
+        QueryWrapper<Student> qr = new QueryWrapper<>();
+        qr.eq("gender", "男");
+        int count = studentService.count(qr);
+        out.println(1);
+
+    }
+
 }

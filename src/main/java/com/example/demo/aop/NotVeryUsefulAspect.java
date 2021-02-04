@@ -1,24 +1,19 @@
 package com.example.demo.aop;
 
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.example.demo.entity.Student;
-import com.example.demo.util.ReflectFieldUtil;
-import org.apache.poi.ss.formula.functions.T;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @description: 表-实体
@@ -82,11 +77,11 @@ public class NotVeryUsefulAspect {
 
     }
 
+//TODO: 2021/2/4 @陈浩 屏蔽环绕方法·会报错
 
-
-    @Pointcut("execution(* com.example.demo.service..*.*(..))")
-    public void aroundService() {
-    }
+//    @Pointcut("execution(* com.example.demo.service..*.*(..))")
+//    public void aroundService() {
+//    }
 
     /**
      * 通过@around对返回值进行处理
@@ -95,33 +90,34 @@ public class NotVeryUsefulAspect {
      * @return
      * @throws Throwable
      */
-    @Around("aroundService()")
-    public Object aroundDemo(ProceedingJoinPoint joinPoint) throws Throwable {
-
-        Object object = joinPoint.proceed();
-
-        String jsonValue = JSONObject.toJSONString(object);
-
-        java.lang.Class<?> targetClass = joinPoint.getTarget().getClass();
-        System.out.println("获取切面所在类为：" + targetClass.getName());
-
-        Type type = targetClass.getGenericSuperclass();
-        ParameterizedType p = (ParameterizedType) type;
-        java.lang.Class tClass = (java.lang.Class<T>) p.getActualTypeArguments()[0]; //com.example.demo.mapper.StudentMapper
-        java.lang.Class tClass1 = (java.lang.Class<T>) p.getActualTypeArguments()[1]; //com.example.demo.entity.Student
-
-        List<Object> tClass1s = JSON.parseArray(jsonValue, tClass1);
-        tClass1s.stream().map(t -> {
-            try {
-                ReflectFieldUtil.formatString(t);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return t;
-        }).collect(Collectors.toList());
-
-        return tClass1s;
-    }
+//    @Around("aroundService()")
+//    public Object aroundDemo(ProceedingJoinPoint joinPoint) throws Throwable {
+//
+//        Object object = joinPoint.proceed();
+//
+//        String jsonValue = JSONObject.toJSONString(object);
+//
+//        java.lang.Class<?> targetClass = joinPoint.getTarget().getClass();
+//        System.out.println("获取切面所在类为：" + targetClass.getName());
+//
+//        Type type = targetClass.getGenericSuperclass();
+//        ParameterizedType p = (ParameterizedType) type;
+//        java.lang.Class tClass = (java.lang.Class<T>) p.getActualTypeArguments()[0]; //com.example.demo.mapper.StudentMapper
+//        java.lang.Class tClass1 = (java.lang.Class<T>) p.getActualTypeArguments()[1]; //com.example.demo.entity.Student
+//
+//        List<Object> tClass1s = new ArrayList<>();
+//        tClass1s = JSON.parseArray(jsonValue, tClass1);
+//        tClass1s.stream().map(t -> {
+//            try {
+//                ReflectFieldUtil.formatString(t);
+//            } catch (IllegalAccessException e) {
+//                e.printStackTrace();
+//            }
+//            return t;
+//        }).collect(Collectors.toList());
+//
+//        return tClass1s;
+//    }
 
     /**
      * 测试定义多个环绕
@@ -133,4 +129,21 @@ public class NotVeryUsefulAspect {
 //        students.add(new Student(5,"name",22,"男",77));
 //        return students;
 //    }
+
+    /**
+     * Jackson library 判断是否为jsonString
+     *
+     * @param jsonInString
+     * @return
+     */
+    public final static boolean isJSONValid2(String jsonInString) {
+        try {
+            final ObjectMapper mapper = new ObjectMapper();
+            mapper.readTree(jsonInString);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
 }

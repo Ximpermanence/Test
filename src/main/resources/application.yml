@@ -13,9 +13,12 @@ spring:
 
 #mybatis-plus
 mybatis-plus:
-# 如果是放在src/main/java目录下 classpath:/com/*/*/mapper/*Mapper.xml
-# 如果是放在resource目录 classpath:/mapper/**.xml
+  # 如果是放在src/main/java目录下 classpath:/com/*/*/mapper/*Mapper.xml
+  # 如果是放在resource目录 classpath:/mapper/**.xml
   mapper-locations: classpath:/mappers/**.xml
+  configuration:
+    mapUnderscoreToCamelCase: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 server:
   port: 7077

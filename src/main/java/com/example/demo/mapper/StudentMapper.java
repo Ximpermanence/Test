@@ -1,8 +1,11 @@
 package com.example.demo.mapper;
 
-import com.example.demo.entity.Student;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.example.demo.entity.Student;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
@@ -32,4 +35,11 @@ public interface StudentMapper extends BaseMapper<Student> {
 
     @Insert("insert into student(name,age,gender,nationCode)")
     int add(Student student);
+
+    /**
+     * 分页获取学生数量
+     * @param wrapper
+     * @return
+     */
+    List<Student> pageStudent(@Param(Constants.WRAPPER) QueryWrapper wrapper);
 }
