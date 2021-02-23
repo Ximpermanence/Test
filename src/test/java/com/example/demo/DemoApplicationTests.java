@@ -10,7 +10,6 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.aop.AppConfig;
 import com.example.demo.aop.UserDao;
 import com.example.demo.entity.Class;
@@ -1012,5 +1011,43 @@ class DemoApplicationTests {
         return subtraction;
     }
 
+    /**
+     * mybatisplus批量修改
+     */
+    @Test
+    void Test43() {
+        List<Student> students = studentService.list().stream().collect(Collectors.toList());
+        students.stream().map(t->{
+            if( t.getId()%4 ==0){
+                t.setName("D"+t.getId());
+            }
+            if(t.getId()%4 ==3){
+                t.setName("C"+t.getId());
+            }
+            if(t.getId()%4 ==2){
+                t.setName("B"+t.getId());
+            }
+            if(t.getId()%4 ==1){
+                t.setName("A"+t.getId());
+            }
+            return t;
+        }).collect(Collectors.toList());
+        studentService.updateBatchById(students);
+    }
+
+    /**
+     * 给出Date为当前时间的前两个月加1天
+     */
+    @Test
+    void Test44(){
+
+        Date today = new Date();
+//        today =  com.example.demo.util.DateUtil.AddMonths(today,-2);
+//        today = com.example.demo.util.DateUtil.AddDays(today,1);
+        today = DateUtil.offsetMonth(today,-2);
+        today = DateUtil.offsetDay(today,1);
+        out.println(today);
+
+    }
 
 }
