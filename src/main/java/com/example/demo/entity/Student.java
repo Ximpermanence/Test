@@ -38,7 +38,7 @@ public class Student implements Serializable {
 
     private Integer age;
 
-    @ApiModelProperty(value = "男，女")
+    @ApiModelProperty(value = "男，女", hidden = true)
     private String gender;
 
     private Integer nationCode;

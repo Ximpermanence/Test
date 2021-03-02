@@ -27,11 +27,25 @@ server:
 management:
   endpoints:
     web:
+      # 开启暴露所有的端点信息
       exposure:
         include: "*"
+      # 调整端点的前缀路径为/
+      base-path: /
   endpoint:
     health:
-      show-details: always
+      show-details: always #显示具体健康信息 默认不会显示详细信息
+    httptrace:
+      enabled: true #启用httptrace端点
+  server:
+    port: 8088
+  security:
+    user:
+      name: ch
+      password: 123
+      roles: ADMIN
+
+
 
 #class
 studentClass: /studentClass

@@ -12,10 +12,8 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.aop.AppConfig;
 import com.example.demo.aop.UserDao;
+import com.example.demo.entity.*;
 import com.example.demo.entity.Class;
-import com.example.demo.entity.Structure;
-import com.example.demo.entity.Student;
-import com.example.demo.entity.SysNation;
 import com.example.demo.entity.TestJs.dto.GetLabourerDTO;
 import com.example.demo.entity.TestJs.res.GetLabourerListPageRes;
 import com.example.demo.enums.StudentSortEnum;
@@ -23,6 +21,8 @@ import com.example.demo.mapper.ClassMapper;
 import com.example.demo.mapper.TeacherMapper;
 import com.example.demo.service.ClassService;
 import com.example.demo.service.StudentService;
+import com.example.demo.service.TeacherService;
+import com.example.demo.service.impl.TeacherServiceImpl;
 import com.example.demo.util.EncodeUtil;
 import com.example.demo.util.EnumUtils;
 import com.example.demo.util.ReflectFieldUtil;
@@ -1017,18 +1017,18 @@ class DemoApplicationTests {
     @Test
     void Test43() {
         List<Student> students = studentService.list().stream().collect(Collectors.toList());
-        students.stream().map(t->{
-            if( t.getId()%4 ==0){
-                t.setName("D"+t.getId());
+        students.stream().map(t -> {
+            if (t.getId() % 4 == 0) {
+                t.setName("D" + t.getId());
             }
-            if(t.getId()%4 ==3){
-                t.setName("C"+t.getId());
+            if (t.getId() % 4 == 3) {
+                t.setName("C" + t.getId());
             }
-            if(t.getId()%4 ==2){
-                t.setName("B"+t.getId());
+            if (t.getId() % 4 == 2) {
+                t.setName("B" + t.getId());
             }
-            if(t.getId()%4 ==1){
-                t.setName("A"+t.getId());
+            if (t.getId() % 4 == 1) {
+                t.setName("A" + t.getId());
             }
             return t;
         }).collect(Collectors.toList());
@@ -1039,15 +1039,30 @@ class DemoApplicationTests {
      * 给出Date为当前时间的前两个月加1天
      */
     @Test
-    void Test44(){
+    void Test44() {
 
         Date today = new Date();
 //        today =  com.example.demo.util.DateUtil.AddMonths(today,-2);
 //        today = com.example.demo.util.DateUtil.AddDays(today,1);
-        today = DateUtil.offsetMonth(today,-2);
-        today = DateUtil.offsetDay(today,1);
+        today = DateUtil.offsetMonth(today, -2);
+        today = DateUtil.offsetDay(today, 1);
         out.println(today);
 
     }
+
+    @Autowired
+    private TeacherService teacherService ;
+
+    /**
+     * 测试如何在启动时将数据加载到内存里
+     */
+    @Test
+    void Test45() {
+        for (int i = 20; i <= 30; i++) {
+            String teacherName = teacherService.getTeacherNameByAge(i);
+            out.println(teacherName);
+        }
+    }
+
 
 }

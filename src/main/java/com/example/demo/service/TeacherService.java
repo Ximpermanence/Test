@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Teacher;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.demo.entity.Teacher;
 
 /**
  * <p>
@@ -12,5 +12,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-08-17
  */
 public interface TeacherService extends IService<Teacher> {
+
+    /**
+     * 获取所给age的教师姓名
+     * @param age
+     * @return
+     */
+    String getTeacherNameByAge(Integer age);
 
 }
