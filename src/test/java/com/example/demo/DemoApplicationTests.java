@@ -392,25 +392,12 @@ class DemoApplicationTests {
         out.println(yearLength);
     }
 
-
     /**
-     * 获取所有建筑工人
+     *
      */
     @Test
-    void Test17() {
-        String url = "http://121.40.57.159:6002/api/v1/CompanyLabourer/GetLabourerListPage?name=&cardNo=&mobile=&worktypeNo=&companyName=&projectName=&isJob=&provinceCode=&cityCode=&countyCode=&province_code=&city_code=&county_code=&industryType=0&PageIndex=1&PageTotal=0&PageSize=1000";
-        String result1 = HttpRequest.get(url)
-                .header("X-Token", "b109001c-a507-404e-9770-a1e969acf0d8")//头信息，多个头信息多次调用此方法即可
-                .timeout(20000)//超时，毫秒
-                .execute().body();
-        out.println(result1);
-        String url2 = "http://121.40.57.159:6003/person";
-//       String result2 = HttpUtil.get(url);
-        String result2 = HttpRequest.get(url)
-                .header("X-Token", "b109001c-a507-404e-9770-a1e969acf0d8")//头信息，多个头信息多次调用此方法即可
-                .timeout(20000)//超时，毫秒
-                .execute().body();
-        out.println(result2);
+    void Test17(){
+
     }
 
     /**
@@ -428,77 +415,10 @@ class DemoApplicationTests {
     }
 
     /**
-     * 测试嘉善接口
-     */
-    @Test
-    void Test19() {
-
-
-//        HashMap<String, Object> paramMap = new HashMap<>();
-//        paramMap.put("userName", "superadmin");
-//        paramMap.put("password", "e10adc3949ba59abbe56e057f20f883e");
-//        String post = HttpUtil.post("http://101.37.66.65:6013/api/v1/User/login",paramMap);
-        String token = "f9b6f220-d303-4ece-9c87-20d4579d1b71";
-
-        List<String> lidList = new ArrayList<>();
-
-//        测建筑工人分页接口——√
-        for (int i = 1; i <= 30; i++) {
-//            String result = HttpUtil.get("http://localhost:8080/api/v1/CompanyLabourer/GetLabourerListPage?name=&cardNo=&mobile=&worktypeNo=&companyName=&projectName=&isJob=&provinceCode=&cityCode=&countyCode=&province_code=&city_code=&county_code=&industryType=0&PageIndex=" + i + "&PageTotal=585&PageSize=20&X-Token="+token);
-            String result = HttpUtil.get("http://101.37.66.65:6012/api/v1/CompanyLabourer/GetLabourerListPage?name=&cardNo=&mobile=&worktypeNo=&companyName=&projectName=&isJob=&provinceCode=&cityCode=&countyCode=&province_code=&city_code=&county_code=&industryType=0&PageIndex=" + i + "&PageTotal=586&PageSize=20&X-Token=" + token);
-            GetLabourerListPageRes getLabourerListPageRes = JSON.parseObject(result, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes.getIsSuccess()) {
-                out.println(i);
-            }
-            ;
-            String resultData = getLabourerListPageRes.getData();
-            List<GetLabourerDTO> getLabourerDTOS = JSON.parseArray(resultData, GetLabourerDTO.class);
-            getLabourerDTOS.stream().map(GetLabourerDTO::getLidF).peek(lidList::add).collect(Collectors.toList());
-
-        }
-        final int[] i = {0};
-        lidList.forEach(t -> {
-
-            //个人信息
-//            String labourerInfo = HttpUtil.get("http://localhost:8080/api/v1/CompanyLabourer/GetLabourerInfo?Parameter="+t+"&X-Token="+token);
-            String labourerInfo = HttpUtil.get("http://101.37.66.65:6012/api/v1/CompanyLabourer/GetLabourerInfo?Parameter=" + t + "&X-Token=" + token);
-            GetLabourerListPageRes getLabourerListPageRes1 = JSON.parseObject(labourerInfo, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes1.getIsSuccess()) {
-                log.error("{}号个人信息出错,lid为{}", i[0], getLabourerListPageRes1.getData());
-                out.println(i[0] + "个人信息出错" + getLabourerListPageRes1.getData());
-            }
-
-
-            //个人履历
-//            String labourerResume = HttpUtil.get("http://localhost:8080/api/v1/CompanyLabourer/GetLabourerResumeList?Parameter="+t+"&PageIndex=1&PageTotal=0&PageSize=20"+"&X-Token="+token);
-
-            String labourerResume = HttpUtil.get("http://101.37.66.65:6012/api/v1/CompanyLabourer/GetLabourerResumeList?Parameter=" + t + "&PageIndex=1&PageTotal=0&PageSize=20" + "&X-Token=" + token);
-            GetLabourerListPageRes getLabourerListPageRes2 = JSON.parseObject(labourerResume, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes2.getIsSuccess()) {
-                log.error("{}号个人信息出错,lid为{}", i[0], getLabourerListPageRes1.getData());
-                out.println(i[0] + "个人履历出错" + getLabourerListPageRes1.getData());
-            }
-            i[0]++;
-            out.println(i[0] + "号表示没有问题");
-            if (i[0] % 10 == 0) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    out.println("第" + i + "此抛出了异常");
-                    e.printStackTrace();
-                }
-            }
-
-        });
-
-        out.println(1);
-    }
-
-    /**
      * 对list去重
      */
     @Test
-    void Test20() {
+    void Test19() {
 
         List<Student> students = new LinkedList<>();
         students.add(new Student(1, "一", 1, "男", 1));
@@ -519,90 +439,10 @@ class DemoApplicationTests {
 
 
     /**
-     * 测试企薪人员查询
-     */
-    @Test
-    void Test21() {
-
-
-//        HashMap<String, Object> paramMap = new HashMap<>();
-//        paramMap.put("userName", "superadmin");
-//        paramMap.put("password", "e10adc3949ba59abbe56e057f20f883e");
-//        String post = HttpUtil.post("http://101.37.66.65:6013/api/v1/User/login",paramMap);
-        String token = "63d2eeea-a258-4083-80ba-4dbed8880213";
-
-        List<String> lidList = new ArrayList<>();
-
-//        测建筑工人分页接口——先查个50页吧
-        for (int i = 11; i <= 50; i++) {
-            String result = HttpUtil.get("http://121.40.57.159:8007/api/v1/CompanyLabourer/GetLabourerListPage?name=&cardNo=&mobile=&worktypeNo=&companyName=&projectName=&isJob=&provinceCode=330000&cityCode=&countyCode=&province_code=330000&city_code=&county_code=&PageIndex=" + i + "&PageTotal=3053717&PageSize=20&X-Token=" + token);
-
-            GetLabourerListPageRes getLabourerListPageRes = JSON.parseObject(result, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes.getIsSuccess()) {
-                log.error("【第{}页】请求失败", i);
-//                System.out.println(i);
-            }
-            ;
-            String resultData = getLabourerListPageRes.getData();
-            List<GetLabourerDTO> getLabourerDTOS = JSON.parseArray(resultData, GetLabourerDTO.class);
-            getLabourerDTOS.stream().map(GetLabourerDTO::getLidF).peek(lidList::add).collect(Collectors.toList());
-
-        }
-        final int[] i = {0};
-        lidList.forEach(t -> {
-
-            //个人信息
-
-            String labourerInfo = HttpUtil.get("http://121.40.57.159:8007/api/v1/CompanyLabourer/GetLabourerInfo?Parameter=" + t + "&X-Token=" + token);
-            GetLabourerListPageRes getLabourerListPageRes1 = JSON.parseObject(labourerInfo, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes1.getIsSuccess()) {
-                log.error("【{}号个人信息出错,lid为{},姓名为】", i[0], getLabourerListPageRes1.getData());
-                out.println(i[0] + "个人信息出错" + getLabourerListPageRes1.getData());
-            }
-
-
-            //个人履历
-
-            String labourerResume = HttpUtil.get("http://121.40.57.159:8007/api/v1/CompanyLabourer/GetLabourerResumeList?Parameter=" + t + "&PageIndex=1&PageTotal=0&PageSize=20 " + "&X-Token=" + token);
-
-            GetLabourerListPageRes getLabourerListPageRes2 = JSON.parseObject(labourerResume, GetLabourerListPageRes.class);
-            if (!getLabourerListPageRes2.getIsSuccess()) {
-                log.error("【{}号个人信息出错,lid为{}】", i[0], getLabourerListPageRes1.getData());
-                out.println(i[0] + "个人履历出错" + getLabourerListPageRes1.getData());
-            }
-
-            //银行信息
-            String labourerBankInfo = HttpUtil.get("http://121.40.57.159:8007/api/v1/LabourerBlack/GetLabourerBankList?Parameter=" + t + "&X-Token=" + token);
-            GetLabourerListPageRes getLabourerBankListPageRes1 = JSON.parseObject(labourerBankInfo, GetLabourerListPageRes.class);
-            if (!getLabourerBankListPageRes1.getIsSuccess()) {
-                log.error("【{}号银行信息,lid为{}】", i[0], getLabourerListPageRes1.getData());
-                out.println(i[0] + "银行信息出错" + getLabourerListPageRes1.getData());
-            }
-
-            i[0]++;
-//            System.out.println(i[0] + "号表示没有问题");
-            if (i[0] % 10 == 0) {
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-//                    System.out.println("第" + i + "此抛出了异常");
-                    log.error("第{}次抛出了异常", i);
-                    e.printStackTrace();
-                }
-            }
-
-        });
-
-        out.println(1);
-
-    }
-
-
-    /**
      * StringBuffer去除最后一个元素
      */
     @Test
-    void Test22() {
+    void Test20() {
         String a = "16,18,";
         StringBuffer sba = new StringBuffer(a);
         sba.deleteCharAt(sba.length() - 1);
@@ -613,7 +453,7 @@ class DemoApplicationTests {
      * 测试encode中Unicode和中文的转换
      */
     @Test
-    void Test23() {
+    void Test21() {
         String str = "木";
         String s = EncodeUtil.stringToUnicode(str);
         out.println(s);  //Ox6728
@@ -625,7 +465,7 @@ class DemoApplicationTests {
      * 测试空的list能不能用stream.map
      */
     @Test
-    void Test24() {
+    void Test22() {
         List<Student> students = new ArrayList<>();
 //        students.add(new Student(1,"ch",22,"男",1));
         students.stream().map(DemoApplicationTests::apply);
@@ -635,7 +475,7 @@ class DemoApplicationTests {
      * random的stream输出
      */
     @Test
-    void Test25() {
+    void Test23() {
         Random random = new Random();
         random.ints().limit(10).forEach(out::println);
     }
@@ -644,7 +484,7 @@ class DemoApplicationTests {
      * BigDecimal除法
      */
     @Test
-    void Test26() {
+    void Test24() {
         BigDecimal a = new BigDecimal(5488);
         out.println(a.divide(new BigDecimal(10000), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)));
     }
@@ -653,7 +493,7 @@ class DemoApplicationTests {
      * 查询结果为null看下stream是否会报错-不会
      */
     @Test
-    void Test27() {
+    void Test25() {
         LambdaQueryWrapper<Student> studentLambdaQueryWrapper = new LambdaQueryWrapper<>();
         studentLambdaQueryWrapper.eq(Student::getName, "sdfdsfsdf");
         List<String> studentName = studentService.list().stream().map(Student::getName).distinct().collect(Collectors.toList());
@@ -664,7 +504,7 @@ class DemoApplicationTests {
      * 用枚举来进行复杂排序
      */
     @Test
-    void Test28() {
+    void Test26() {
         List<Student> students = studentService.list();
         List<Student> students1 = students.stream()
                 .sorted(Comparator.comparing(t -> {
@@ -685,7 +525,7 @@ class DemoApplicationTests {
      * 获取枚举类key的list
      */
     @Test
-    void Test29() {
+    void Test27() {
         StudentSortEnum[] enumNames = StudentSortEnum.values();
         List<String> names = EnumUtil.getNames(StudentSortEnum.class);
 
@@ -704,7 +544,7 @@ class DemoApplicationTests {
      * 查看common lang3 和spring的collectionUtils和stringUtils
      */
     @Test
-    void Test30() {
+    void Test28() {
         boolean a = StringUtils.isEmpty("a");
         boolean b = org.springframework.util.StringUtils.isEmpty("b");
 
@@ -714,7 +554,7 @@ class DemoApplicationTests {
      * 将一个txt的文件拿出来放到一个List里
      */
     @Test
-    void Test31() throws IOException {
+    void Test29() throws IOException {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("GB2260-2015.txt");
         inputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("GB2260-2015.txt");
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -757,7 +597,7 @@ class DemoApplicationTests {
      * jdk8 stream读取文件
      */
     @Test
-    public void Test32() {
+    public void Test30() {
         Path filePath = Paths.get("C:\\Users\\CH\\IdeaProjects\\space\\Test\\src\\main\\resources\\GB2260-2015.txt");
 
         List<String> filteredLines = new ArrayList<>();
@@ -798,7 +638,7 @@ class DemoApplicationTests {
      * 打开指定的文件
      */
     @Test
-    void Test33() throws IOException {
+    void Test31() throws IOException {
         String[] sh = {"cmd", "/c", "C:/Users/CH/IdeaProjects/space/JDPruchase/QCode.png"};
         String sh1 = "cmd /c C:/Users/CH/IdeaProjects/space/JDPruchase/QCode.png";
         Runtime.getRuntime().exec(sh);
@@ -808,7 +648,7 @@ class DemoApplicationTests {
      * 随机数
      */
     @Test
-    void Test34() {
+    void Test32() {
         int a = (int) ((Math.random() * (9999999 - 1000000 + 1)) + 1000000);
         out.println(a);
     }
@@ -817,7 +657,7 @@ class DemoApplicationTests {
      * 加密
      */
     @Test
-    void Test35() throws InterruptedException {
+    void Test33() throws InterruptedException {
         out.println(SecureUtil.md5("这是一个测试文案"));
         out.println(SecureUtil.md5("123456789"));
 
@@ -827,7 +667,7 @@ class DemoApplicationTests {
      * float会丢失精度 保留两位小数
      */
     @Test
-    void Test36() {
+    void Test34() {
 
         float float1 = 0.55f;
         float float2 = 0.1f;
@@ -854,7 +694,7 @@ class DemoApplicationTests {
      * 通过加@Accessors(chain = true)使得连续set
      */
     @Test
-    void Test37() {
+    void Test35() {
         Class cas = new Class();
         cas.setName("sa").setTid(1).setId(1);
     }
@@ -863,7 +703,7 @@ class DemoApplicationTests {
      * hutool爬虫
      */
     @Test
-    void Test38() {
+    void Test36() {
         //请求列表页
         String listContent = HttpUtil.get("https://www.oschina.net/action/ajax/get_more_news_list?newsType=&p=2");
         //使用正则获取所有标题
@@ -878,7 +718,7 @@ class DemoApplicationTests {
      * 尝试todo
      */
     @Test
-    void Test39() {
+    void Test37() {
         //TODO: 2021/2/1 测试todo  @陈浩
 //        String a = StringUtils.toRootUpperCase("device_is_online");
 //        out.println(1);
@@ -894,7 +734,7 @@ class DemoApplicationTests {
      * 获取服务器信息
      */
     @Test
-    void Test40() {
+    void Test38() {
         SystemInfo si = new SystemInfo();
         HardwareAbstractionLayer hal = si.getHardware();
         CentralProcessor processor = hal.getProcessor();
@@ -948,7 +788,7 @@ class DemoApplicationTests {
      * 将base64字符串和图片的转换
      */
     @Test
-    void Test41() throws IOException {
+    void Test39() throws IOException {
         FileInputStream inputStream = null;
         FileOutputStream outputStream = null;
         try {
@@ -984,7 +824,7 @@ class DemoApplicationTests {
      * 两个线程同时执行并得到结果
      */
     @Test
-    void Test42() throws ExecutionException, InterruptedException {
+    void Test40() throws ExecutionException, InterruptedException {
         long l1 = currentTimeMillis();
 //        nMillionSout(2,"线程1");
 //        nMillionSout(2,"线程2");
@@ -1015,7 +855,7 @@ class DemoApplicationTests {
      * mybatisplus批量修改
      */
     @Test
-    void Test43() {
+    void Test41() {
         List<Student> students = studentService.list().stream().collect(Collectors.toList());
         students.stream().map(t -> {
             if (t.getId() % 4 == 0) {
@@ -1039,7 +879,7 @@ class DemoApplicationTests {
      * 给出Date为当前时间的前两个月加1天
      */
     @Test
-    void Test44() {
+    void Test42() {
 
         Date today = new Date();
 //        today =  com.example.demo.util.DateUtil.AddMonths(today,-2);
@@ -1057,12 +897,17 @@ class DemoApplicationTests {
      * 测试如何在启动时将数据加载到内存里
      */
     @Test
-    void Test45() {
+    void Test43() {
         for (int i = 20; i <= 30; i++) {
             String teacherName = teacherService.getTeacherNameByAge(i);
             out.println(teacherName);
         }
     }
 
+    @Test
+    void Test44(){
+        String s = String.valueOf(null);
+        out.println(s);
+    }
 
 }
