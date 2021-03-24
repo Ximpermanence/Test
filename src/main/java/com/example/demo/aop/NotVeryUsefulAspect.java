@@ -74,6 +74,7 @@ public class NotVeryUsefulAspect {
 
         // 根据类、方法、参数类型（重载）获取到方法的具体信息
         Method objMethod = targetClass.getMethod(methodName, parameterTypes);
+        System.out.println(1);
 
     }
 

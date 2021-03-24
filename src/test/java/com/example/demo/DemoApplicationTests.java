@@ -177,6 +177,11 @@ class DemoApplicationTests {
 
     }
 
+//    stream分组
+    @Test
+    void Test3(){
+
+    }
     /**
      * 数据类型转换相关
      *
