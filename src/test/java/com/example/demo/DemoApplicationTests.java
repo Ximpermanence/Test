@@ -5,24 +5,20 @@ import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.SecureUtil;
-import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.aop.AppConfig;
 import com.example.demo.aop.UserDao;
-import com.example.demo.entity.*;
 import com.example.demo.entity.Class;
-import com.example.demo.entity.TestJs.dto.GetLabourerDTO;
-import com.example.demo.entity.TestJs.res.GetLabourerListPageRes;
+import com.example.demo.entity.*;
 import com.example.demo.enums.StudentSortEnum;
 import com.example.demo.mapper.ClassMapper;
 import com.example.demo.mapper.TeacherMapper;
 import com.example.demo.service.ClassService;
 import com.example.demo.service.StudentService;
 import com.example.demo.service.TeacherService;
-import com.example.demo.service.impl.TeacherServiceImpl;
 import com.example.demo.util.EncodeUtil;
 import com.example.demo.util.EnumUtils;
 import com.example.demo.util.ReflectFieldUtil;
@@ -177,11 +173,12 @@ class DemoApplicationTests {
 
     }
 
-//    stream分组
+    //    stream分组
     @Test
-    void Test3(){
+    void Test3() {
 
     }
+
     /**
      * 数据类型转换相关
      *
@@ -401,8 +398,28 @@ class DemoApplicationTests {
      *
      */
     @Test
-    void Test17(){
+    void Test17() {
+        boolean a = true;
+        boolean b = false;
+        short z = 40;
+        if (z++ == 40 && (b = true)) {
+            z++;
+        }
+        if (a = false || ++z == 43) {
+            z++;
+        }
+        out.println(z);
 
+        //==：比较的是内存中的地址是否相同;equals()该方法根据不同的类的实现方式，重写父类Object方法的话就按照自己的定义来，没有重写的话就是跟==相同(@Data重写了equals方法？)
+        TeacherClass teacherClass = new TeacherClass(1, 1, 1);
+        TeacherClass teacherClass1 = new TeacherClass(1, 1, 1);
+        TeacherClass teacherClass2 = teacherClass;
+        boolean c = teacherClass == teacherClass1;
+        boolean d = teacherClass == teacherClass2;
+        boolean c1 = teacherClass.equals(teacherClass1);
+        boolean d1 = teacherClass.equals(teacherClass2);
+
+        out.println("" + c + d + c1 + d1);
     }
 
     /**
@@ -650,11 +667,29 @@ class DemoApplicationTests {
     }
 
     /**
-     * 随机数
+     * 随机数和case合并
      */
     @Test
     void Test32() {
-        int a = (int) ((Math.random() * (9999999 - 1000000 + 1)) + 1000000);
+        //1-10  [1,10)
+//        int a = (int) ((Math.random() * 9) + 1);
+        //1-10  [1,10]
+        int a = (int) ((Math.random() * 10-1+1) + 1);
+        switch (a) {
+            case 1:
+            case 2:
+            case 3:
+                out.println(a);
+                break;
+            case 4:
+            case 5:
+            case 6:
+                out.println(a * 10);
+                break;
+            default:
+                out.println(a * 100);
+                break;
+        }
         out.println(a);
     }
 
@@ -720,7 +755,7 @@ class DemoApplicationTests {
     }
 
     /**
-     * 尝试todo
+     * 测试todo和list的循环
      */
     @Test
     void Test37() {
@@ -733,6 +768,23 @@ class DemoApplicationTests {
         list.add("c");
         list.add("d");
         System.out.println(list.subList(1, 4));
+//        list.forEach(t -> {
+//            if (t.equals("c")) {
+//                out.println("结束吧");
+////               break;//使用lambda表达式的foreach无法用break和continue 只能使用return跳过当次循环
+//                return;
+//            }
+//            out.println(t);
+//        });
+        for (String s : list) {
+            if (s.equals("c")) {
+                out.println("结束吧");
+//                continue;
+//                break;
+            return;
+            }
+            out.println(s);
+        }
     }
 
     /**
@@ -896,7 +948,7 @@ class DemoApplicationTests {
     }
 
     @Autowired
-    private TeacherService teacherService ;
+    private TeacherService teacherService;
 
     /**
      * 测试如何在启动时将数据加载到内存里
@@ -909,10 +961,59 @@ class DemoApplicationTests {
         }
     }
 
+    /**
+     * 测试各种valueofnull是否会报错
+     */
     @Test
-    void Test44(){
-        String s = String.valueOf(null);
-        out.println(s);
+    void Test44() {
+        Scanner scanner = new Scanner(System.in);
+        scanner.nextInt();
+        String next = scanner.next();
+
+        Integer s = Integer.valueOf(null);
+        String a = String.valueOf(null);
+    }
+    
+    @Test
+    void Test45(){
+
+        //指定循环
+        circulation: for (int i = 1; i <=4 ; i++) {
+            for (int j = 1; j <= 10; j++) {
+
+                if(j%4==0){
+//                    break;//默认跳出包裹此路径的最近的一层循环
+                break circulation;//结束指定标识的一层循环
+                }
+                out.print(j);
+            }
+            out.println();
+        }
+    }
+
+    @Test
+    void Test46(){
+        int[] array = new int[]{1,2,3,4,5};
+        Teacher a = new Teacher(1,"1",1,"男");
+        Teacher b = a;
+        b.setGender("女");
+        out.println(b);
+        out.println(a);
+    }
+
+    /**
+     * 从键盘输入
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        Scanner scanner = new Scanner(System.in);
+
+        int nextInt = scanner.nextInt();
+        String scanString = scanner.next();
+
+        out.println(nextInt);
     }
 
 }
