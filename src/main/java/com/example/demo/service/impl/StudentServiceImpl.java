@@ -89,11 +89,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         int count = studentMapper.modify(student);
         ValueOperations operations = redisTemplate.opsForValue();
         //缓存存在
-        String key = "student_"+student.getId();
+        String key = "student_"+student.getSid();
 
         if(redisTemplate.hasKey(key)){
             //更新缓存
-            Student stu = studentMapper.findBySid(student.getId());
+            Student stu = studentMapper.findBySid(student.getSid());
             operations.set(key,stu);
         }
         return count;

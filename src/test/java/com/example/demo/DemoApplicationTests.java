@@ -915,17 +915,17 @@ class DemoApplicationTests {
     void Test41() {
         List<Student> students = studentService.list().stream().collect(Collectors.toList());
         students.stream().map(t -> {
-            if (t.getId() % 4 == 0) {
-                t.setName("D" + t.getId());
+            if (t.getSid() % 4 == 0) {
+                t.setName("D" + t.getSid());
             }
-            if (t.getId() % 4 == 3) {
-                t.setName("C" + t.getId());
+            if (t.getSid() % 4 == 3) {
+                t.setName("C" + t.getSid());
             }
-            if (t.getId() % 4 == 2) {
-                t.setName("B" + t.getId());
+            if (t.getSid() % 4 == 2) {
+                t.setName("B" + t.getSid());
             }
-            if (t.getId() % 4 == 1) {
-                t.setName("A" + t.getId());
+            if (t.getSid() % 4 == 1) {
+                t.setName("A" + t.getSid());
             }
             return t;
         }).collect(Collectors.toList());
@@ -999,6 +999,13 @@ class DemoApplicationTests {
         b.setGender("女");
         out.println(b);
         out.println(a);
+    }
+
+    @Test
+    void Test47(){
+    Teacher teacher = null;
+    teacher.setGender("男");
+        out.println(teacher.toString());
     }
 
     /**

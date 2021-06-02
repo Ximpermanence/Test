@@ -54,6 +54,11 @@ public class ReflectFieldUtil {
                     fields[i].set(object, "--");
                 }
             }
+            if (Objects.equals(fields[i].getType().getName(), "java.lang.Integer")) {
+                if (StringUtils.isEmpty(fields[i].get(object))) {
+                    fields[i].set(object, 0);
+                }
+            }
         }
         return object;
     }

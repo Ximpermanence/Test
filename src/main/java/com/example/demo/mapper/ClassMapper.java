@@ -1,8 +1,11 @@
 package com.example.demo.mapper;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Class;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo.entity.Structure;
+import com.example.demo.entity.vo.ClassStudentVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -47,4 +50,10 @@ public interface ClassMapper extends BaseMapper<Class> {
     @Select("select TABLE_NAME from information_schema.TABLES where TABLE_SCHEMA=(select database())")
     List<String> listTableName();
 
+    /**
+     * 获取班级以及对应的学生
+     * @param
+     * @return
+     */
+    List<ClassStudentVO> listClassStudent();
 }

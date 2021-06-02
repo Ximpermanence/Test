@@ -31,14 +31,14 @@ import org.springframework.stereotype.Component;
 public class Student implements Serializable {
 
     private static final long serialVersionUID = 5138577323438599496L;
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    @TableId(value = "sid", type = IdType.AUTO)
+    private Integer sid;
 
     private String name;
 
     private Integer age;
 
-    @ApiModelProperty(value = "男，女", hidden = true)
+    @ApiModelProperty(value = "1、男，2、女", hidden = true)
     private String gender;
 
     private Integer nationCode;

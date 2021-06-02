@@ -2,4 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.ClassMapper">
 
+    <resultMap id="ClassStudentMap" type="com.example.demo.entity.vo.ClassStudentVO">
+        <id column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="teacherName" jdbcType="VARCHAR" property="teacherName" />
+        <result column="tid" jdbcType="BIGINT" property="tid" />
+        <collection property="students" ofType="com.example.demo.entity.Student" >
+            <result column="studentName" jdbcType="VARCHAR" property="name" />
+            <result column="age" jdbcType="INTEGER" property="age" />
+            <result column="gender" jdbcType="VARCHAR" property="gender" />
+        </collection>
+    </resultMap>
+    <select id="listClassStudent" resultMap="ClassStudentMap">
+        SELECT
+            c.id AS cid,
+            c.`name`,
+            t.name AS teacherName,
+            c.tid,
+            s.`name` AS studentName,
+            s.age,
+            s.gender
+        FROM
+            student_class AS sc
+                LEFT JOIN class AS c ON sc.cid = c.id
+                LEFT JOIN student AS s ON sc.sid = s.sid
+                LEFT JOIN teacher AS t ON c.tid = t.id
+    </select>
 </mapper>

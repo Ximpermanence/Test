@@ -1,7 +1,12 @@
 package com.example.demo.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Class;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.example.demo.entity.vo.ClassStudentVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +18,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ClassService extends IService<Class> {
 
+    /**
+     * 获取班级以及对应的学生
+     * @param page
+     * @return
+     */
+    List<ClassStudentVO> pageClassStudent(Page page);
 }

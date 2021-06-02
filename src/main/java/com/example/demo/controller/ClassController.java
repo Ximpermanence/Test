@@ -1,7 +1,10 @@
 package com.example.demo.controller;
 
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Class;
+import com.example.demo.entity.vo.ClassStudentVO;
 import com.example.demo.service.ClassService;
 import com.example.demo.service.excel.ExcelOutputService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,11 @@ public class ClassController {
     @GetMapping("/list_class")
     public List<Class> listClass(){
        return classService.list();
+    }
+
+    @GetMapping("/classStudent")
+    public List<ClassStudentVO> classStudent(Page page){
+        return classService.pageClassStudent(page);
     }
 
 }
