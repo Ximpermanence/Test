@@ -6,6 +6,7 @@ import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
+
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -117,17 +118,13 @@ class DemoApplicationTests {
 //                iterator.remove();
 //            }
 //        }
-        for (String str : list) {
-            if ("2".equals(str)) {
-                list.remove(str);
-            }
-        }
+        list.removeIf("2"::equals);
         list.forEach(out::println);
 
     }
 
     /**
-     * 将excel导入数据库
+     * hutool excel导入获取
      */
     @Test
     void Test1() {
@@ -135,23 +132,18 @@ class DemoApplicationTests {
 //        String excelFileName = "C:\\Users\\CH\\Desktop\\table\\classTable.xls";
         String excelFileName = "c:/table/classTable.xls";
         // 读取Excel文件内容
-//        List<ClassExcelVO> readResult = ExcelUtil.readExcel(excelFileName);
-//        readResult.forEach(System.out::println);
 
-//        List<Map<String,Object>> classList = cn.hutool.poi.excel.ExcelUtil.getReader(excelFileName).readAll();
+//        List<Map<String,Object>> classList = ExcelUtil.getReader(excelFileName).readAll();
 //        classList.forEach(System.out::println);
 
         List<List<Object>> classList = ExcelUtil.getReader(excelFileName).read();
         List<Class> resultList = new ArrayList<>();
-//        for(List<Object> list: classList){
-//
-//        }
+
         for (int i = 1; i < classList.size(); i++) {
             List<Object> objectList = classList.get(i);
             Class aClass = new Class();
             aClass.setName((String) objectList.get(0));
-//            aClass.setTid(objectList.get(1) );
-            aClass.setTid(Integer.parseInt(String.valueOf(objectList.get(1))));
+            aClass.setTid((Integer) objectList.get(1));
             resultList.add(aClass);
         }
         classService.saveBatch(resultList);
@@ -254,7 +246,7 @@ class DemoApplicationTests {
     @Test
     void Test9() throws NoSuchFieldException, IllegalAccessException {
         Student student = new Student(9, "10", 11, "J", 12);
-        List<Student> students = searchList("name", student, "无常");
+        List<Student> students = searchFieldInitValueInList("name", student, "无常");
         out.println(students.get(0).toString());
     }
 
@@ -270,7 +262,7 @@ class DemoApplicationTests {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public <T> List<T> searchList(String field, T t, String saveMessage) throws NoSuchFieldException, IllegalAccessException {
+    public <T> List<T> searchFieldInitValueInList(String field, T t, String saveMessage) throws NoSuchFieldException, IllegalAccessException {
         Boolean ifExist = ReflectFieldUtil.ifClassHasField(field, t);
 
         List<T> personList = new ArrayList<>();
@@ -295,7 +287,7 @@ class DemoApplicationTests {
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
-    public <T> List<T> searchList2(String field, Object object, String saveMessage) throws NoSuchFieldException, IllegalAccessException {
+    public <T> List<T> searchFieldInitValueInList2(String field, Object object, String saveMessage) throws NoSuchFieldException, IllegalAccessException {
         Boolean ifExist = ReflectFieldUtil.ifClassHasField(field, object);
 
         List<T> personList = new ArrayList<>();
@@ -472,7 +464,7 @@ class DemoApplicationTests {
     }
 
     /**
-     * 测试encode中Unicode和中文的转换
+     * 测试encode中Unicode和中文的转换(用hutool即可)
      */
     @Test
     void Test21() {
@@ -540,7 +532,6 @@ class DemoApplicationTests {
                 .collect(Collectors.toList());
 
         out.println(1);
-
     }
 
     /**

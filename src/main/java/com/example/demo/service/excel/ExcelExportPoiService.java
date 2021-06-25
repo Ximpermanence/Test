@@ -6,11 +6,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @description: 表-实体
+ * @description: poi导出服务类
  * @author: chenhao
  * @create:2020/8/17 11:19
  **/
 @Service
-public interface ExcelOutputService {
+public interface ExcelExportPoiService {
+
+    /**
+     * 导出班级
+     * @param request
+     * @param response
+     */
     void exportClassExcel(HttpServletRequest request, HttpServletResponse response);
 }

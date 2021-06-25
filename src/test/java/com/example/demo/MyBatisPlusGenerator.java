@@ -13,15 +13,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * @description: 表-实体
+ * @description: mybatisplus自动生成
  * @author: chenhao
  * @create:2020/8/17 10:40
  **/
 @SpringBootTest
-public class mpg {
+public class MyBatisPlusGenerator {
 
     @Test
-    void generator() {
+    void myGenerator() {
         AutoGenerator generator = new AutoGenerator();
 
         //设置数据源

@@ -1,22 +1,29 @@
 package com.example.demo.util;
 
+import com.example.demo.entity.Class;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * @description: 表-实体
+ * @description: poi导入导出excel
  * @author: chenhao
  * @create:2020/8/17 13:12
  **/
 @Slf4j
-public class ExcelUtil {
+public class ExcelPoiUtil {
 
     /**
      * 导出Excel
@@ -146,5 +153,118 @@ public class ExcelUtil {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+
+
+    /**
+     * 导入Excel
+     * @param file
+     * @return
+     */
+    public static List<Object[]> importExcel(MultipartFile file) {
+        log.info("导入解析开始，file:{}", file.toString());
+        try {
+            List<Object[]> list = new ArrayList<>();
+            InputStream inputStream = file.getInputStream();
+            Workbook workbook = WorkbookFactory.create(inputStream);
+            Sheet sheet = workbook.getSheetAt(0);
+            //获取sheet的行数
+            int rows = sheet.getPhysicalNumberOfRows();
+            for (int i = 0; i < rows; i++) {
+                //过滤表头行
+                if (i == 0) {
+                    continue;
+                }
+                //获取当前行的数据
+                Row row = sheet.getRow(i);
+                Object[] objects = new Object[row.getPhysicalNumberOfCells()];
+                int index = 0;
+                for (Cell cell : row) {
+                    if (Objects.equals(cell.getCellType(), CellType.NUMERIC)) {
+                        objects[index] = (int) cell.getNumericCellValue();
+                    }
+                    if (Objects.equals(cell.getCellType(), CellType.STRING)) {
+                        objects[index] = cell.getStringCellValue();
+                    }
+                    if (Objects.equals(cell.getCellType(), CellType.BOOLEAN)) {
+                        objects[index] = cell.getBooleanCellValue();
+                    }
+                    if (Objects.equals(cell.getCellType(), CellType.ERROR)) {
+                        objects[index] = cell.getErrorCellValue();
+                    }
+                    index++;
+                }
+                list.add(objects);
+            }
+            log.info("导入文件解析成功！");
+            return list;
+        } catch (Exception e) {
+            log.info("导入文件解析失败！");
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //测试导入
+    public static void main(String[] args) {
+        List<Class> res = new ArrayList<>();
+        try {
+            final String fileName = "D:/class模板.xls";
+            InputStream inputStream = new FileInputStream(fileName);
+
+            MultipartFile file = new MultipartFile() {
+                @Override
+                public String getName() {
+                    return null;
+                }
+
+                @Override
+                public String getOriginalFilename() {
+                    return null;
+                }
+
+                @Override
+                public String getContentType() {
+                    return null;
+                }
+
+                @Override
+                public boolean isEmpty() {
+                    return false;
+                }
+
+                @Override
+                public long getSize() {
+                    return 0;
+                }
+
+                @Override
+                public byte[] getBytes() throws IOException {
+                    return new byte[0];
+                }
+
+                @Override
+                public InputStream getInputStream() throws IOException {
+                    return  new FileInputStream(fileName);
+                }
+
+                @Override
+                public void transferTo(File dest) throws IOException, IllegalStateException {
+
+                }
+            };
+            List<Object[]> list = importExcel(file);
+            for (int i = 0; i < list.size(); i++) {
+                Class param = new Class();
+                param.setId((int)(list.get(i)[0]));
+                param.setName(String.valueOf(list.get(i)[1]));
+                param.setTid((int)(list.get(i)[2]));
+                System.out.println(param.toString());
+                res.add(param);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(1);
     }
 }
