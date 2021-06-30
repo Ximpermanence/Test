@@ -1,4 +1,4 @@
-package com.example.demo.entity.TestJs.dto;
+package com.example.demo.pojo.TestJs.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

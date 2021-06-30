@@ -3,7 +3,7 @@ package com.example.demo.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Class;
-import com.example.demo.entity.vo.ClassStudentVO;
+import com.example.demo.pojo.vo.ClassStudentVO;
 import com.example.demo.service.ClassService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -44,5 +45,11 @@ public class ClassController {
         return classService.pageClassStudent(page);
     }
 
+    @GetMapping("/insertClass")
+    @ApiOperation("添加新班级")
+    // TODO: 2021/6/29 @陈浩 这里要修改 要写个globalException进行处理
+    public String insertClass(@Valid Class param){
+        return classService.insertClass(param);
+    }
 }
 

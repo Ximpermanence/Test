@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.mapper.ClassMapper">
 
-    <resultMap id="ClassStudentMap" type="com.example.demo.entity.vo.ClassStudentVO">
+    <resultMap id="ClassStudentMap" type="com.example.demo.pojo.vo.ClassStudentVO">
         <id column="cid" jdbcType="BIGINT" property="cid"/>
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="teacherName" jdbcType="VARCHAR" property="teacherName" />

@@ -3,7 +3,7 @@ package com.example.demo.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.demo.entity.Class;
-import com.example.demo.entity.vo.ClassStudentVO;
+import com.example.demo.pojo.vo.ClassStudentVO;
 import com.example.demo.mapper.ClassMapper;
 import com.example.demo.service.ClassService;
 import org.springframework.stereotype.Service;
@@ -33,5 +33,14 @@ public class ClassServiceImpl extends ServiceImpl<ClassMapper, Class> implements
 //        Page page1 = new Page(1,2);
 
         return baseMapper.listClassStudent();
+    }
+
+    @Override
+    public String insertClass(Class param) {
+        boolean save = this.save(param);
+        if(save){
+            return "新增成功";
+        }
+        return "新增失败";
     }
 }

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.Result1;
 import com.example.demo.entity.Class;
 import com.example.demo.entity.Student;
-import com.example.demo.entity.vo.TestVO;
+import com.example.demo.pojo.vo.TestVO;
 import com.example.demo.mapper.StudentMapper;
 import com.example.demo.service.ClassService;
 import com.example.demo.service.StudentService;

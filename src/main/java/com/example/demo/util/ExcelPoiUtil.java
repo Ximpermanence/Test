@@ -1,5 +1,6 @@
 package com.example.demo.util;
 
+import com.alibaba.fastjson.JSON;
 import com.example.demo.entity.Class;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.*;
@@ -12,6 +13,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -158,6 +162,7 @@ public class ExcelPoiUtil {
 
     /**
      * 导入Excel
+     *
      * @param file
      * @return
      */
@@ -205,6 +210,55 @@ public class ExcelPoiUtil {
         return null;
     }
 
+
+    private static <T> List<T> invertToList(MultipartFile file, T t) {
+        try {
+            file.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        List<Object[]> list = importExcel(file);
+        List<T> res = new ArrayList<>();
+        Object invoke = null;
+        try {
+            Method method = t.getClass().getSuperclass().getMethod("getAll");
+            invoke = method.invoke(t);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+
+            e.printStackTrace();
+        }
+        String[] filedString = String.valueOf(invoke).split(",");
+        try {
+            for (int i = 0; i < Objects.requireNonNull(list).size(); i++) {
+                Field[] fields = t.getClass().getDeclaredFields();
+                // 可已通过重写getAll()方法进行排序获取值
+                t = (T) t.getClass().getDeclaredConstructor().newInstance();
+                for (int i1 = 0; i1 < filedString.length; i1++) {
+                    for (Field field : fields) {
+                        field.setAccessible(true);
+                        if (filedString[i1].equals(field.getName())) {
+                            field.set(t, list.get(i)[i1]);
+                            break;
+                        }
+                    }
+                }
+                //默认顺序
+//                t = (T) t.getClass().getDeclaredConstructor().newInstance();
+//                for (int j = 0; j < fields.length; j++) {
+//                    fields[j].setAccessible(true);
+//                    fields[j].set(t, list.get(i)[j]);
+//                }
+                res.add(t);
+            }
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+            log.error("劳资专员导入失败，错误信息：" + e.getMessage() + "\n导入数据：" + JSON.toJSONString(list));
+            e.printStackTrace();
+        }
+        return res;
+
+    }
+
+
     //测试导入
     public static void main(String[] args) {
         List<Class> res = new ArrayList<>();
@@ -245,7 +299,7 @@ public class ExcelPoiUtil {
 
                 @Override
                 public InputStream getInputStream() throws IOException {
-                    return  new FileInputStream(fileName);
+                    return new FileInputStream(fileName);
                 }
 
                 @Override
@@ -253,15 +307,17 @@ public class ExcelPoiUtil {
 
                 }
             };
-            List<Object[]> list = importExcel(file);
-            for (int i = 0; i < list.size(); i++) {
-                Class param = new Class();
-                param.setId((int)(list.get(i)[0]));
-                param.setName(String.valueOf(list.get(i)[1]));
-                param.setTid((int)(list.get(i)[2]));
-                System.out.println(param.toString());
-                res.add(param);
-            }
+//            List<Object[]> list = importExcel(file);
+//            for (int i = 0; i < list.size(); i++) {
+//                Class param = new Class();
+//                param.setId((int) (list.get(i)[0]));
+//                param.setName(String.valueOf(list.get(i)[1]));
+//                param.setTid((int) (list.get(i)[2]));
+//                System.out.println(param.toString());
+//                res.add(param);
+//            }
+            Class a = new Class();
+            res = invertToList(file, a);
         } catch (Exception e) {
             e.printStackTrace();
         }

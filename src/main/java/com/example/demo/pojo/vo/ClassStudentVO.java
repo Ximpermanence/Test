@@ -1,4 +1,4 @@
-package com.example.demo.entity.vo;
+package com.example.demo.pojo.vo;
 
 import com.example.demo.entity.Student;
 import io.swagger.annotations.ApiModelProperty;

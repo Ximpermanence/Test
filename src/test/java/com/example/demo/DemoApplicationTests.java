@@ -6,7 +6,6 @@ import cn.hutool.core.util.EnumUtil;
 import cn.hutool.core.util.ReUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.http.HttpUtil;
-
 import cn.hutool.poi.excel.ExcelUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -226,6 +225,12 @@ class DemoApplicationTests {
         } else {
             out.println("内部链表实现");
         }
+
+        List<Class> classList1 = classService.list(new LambdaQueryWrapper<Class>().eq(Class::getId, 2154156L));
+
+        out.println(JSON.toJSONString(classList1));
+
+
     }
 
     /**
@@ -665,7 +670,7 @@ class DemoApplicationTests {
         //1-10  [1,10)
 //        int a = (int) ((Math.random() * 9) + 1);
         //1-10  [1,10]
-        int a = (int) ((Math.random() * 10-1+1) + 1);
+        int a = (int) ((Math.random() * 10 - 1 + 1) + 1);
         switch (a) {
             case 1:
             case 2:
@@ -772,7 +777,7 @@ class DemoApplicationTests {
                 out.println("结束吧");
 //                continue;
 //                break;
-            return;
+                return;
             }
             out.println(s);
         }
@@ -964,17 +969,18 @@ class DemoApplicationTests {
         Integer s = Integer.valueOf(null);
         String a = String.valueOf(null);
     }
-    
+
     @Test
-    void Test45(){
+    void Test45() {
 
         //指定循环
-        circulation: for (int i = 1; i <=4 ; i++) {
+        circulation:
+        for (int i = 1; i <= 4; i++) {
             for (int j = 1; j <= 10; j++) {
 
-                if(j%4==0){
+                if (j % 4 == 0) {
 //                    break;//默认跳出包裹此路径的最近的一层循环
-                break circulation;//结束指定标识的一层循环
+                    break circulation;//结束指定标识的一层循环
                 }
                 out.print(j);
             }
@@ -983,9 +989,9 @@ class DemoApplicationTests {
     }
 
     @Test
-    void Test46(){
-        int[] array = new int[]{1,2,3,4,5};
-        Teacher a = new Teacher(1,"1",1,"男");
+    void Test46() {
+        int[] array = new int[]{1, 2, 3, 4, 5};
+        Teacher a = new Teacher(1, "1", 1, "男");
         Teacher b = a;
         b.setGender("女");
         out.println(b);
@@ -993,10 +999,20 @@ class DemoApplicationTests {
     }
 
     @Test
-    void Test47(){
-    Teacher teacher = null;
-    teacher.setGender("男");
+    void Test47() {
+        Teacher teacher = null;
+        teacher.setGender("男");
         out.println(teacher.toString());
+    }
+
+    @Test
+    void Test48(){
+
+        Class classA = new Class();
+        Field[] fields = classA.getClass().getDeclaredFields();
+        out.println(fields.length);
+        String all = classA.getAll();
+        out.println(all);
     }
 
     /**

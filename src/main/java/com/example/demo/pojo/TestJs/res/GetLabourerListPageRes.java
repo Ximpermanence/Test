@@ -1,12 +1,8 @@
-package com.example.demo.entity.TestJs.res;
+package com.example.demo.pojo.TestJs.res;
 
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.demo.entity.TestJs.PagIng;
-import com.example.demo.entity.TestJs.dto.GetLabourerDTO;
+import com.example.demo.pojo.TestJs.PagIng;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @description:

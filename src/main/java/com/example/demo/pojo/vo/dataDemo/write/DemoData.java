@@ -1,4 +1,4 @@
-package com.example.demo.entity.vo.dataDemo.write;
+package com.example.demo.pojo.vo.dataDemo.write;
 
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;

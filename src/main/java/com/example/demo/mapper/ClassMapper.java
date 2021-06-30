@@ -1,16 +1,12 @@
 package com.example.demo.mapper;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.entity.Class;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.demo.entity.Structure;
-import com.example.demo.entity.vo.ClassStudentVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.demo.pojo.vo.ClassStudentVO;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
